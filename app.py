@@ -43,3 +43,8 @@ def login():
         return redirect("/")
 
     return render_template('login.html', error=error)
+
+@app.route("/teste")
+@login_required
+def teste():
+    return render_template("teste.html")
