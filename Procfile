@@ -1,2 +1,2 @@
 web: gunicorn app:app
-worker: python websocket.py
+api: python websocket.py
