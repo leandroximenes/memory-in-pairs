@@ -19,8 +19,17 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
     session.clear()
     if request.method == "POST":
+        if not request.form.get("email"):
+            error = 'Email required'
+            return render_template('login.html', error=error)
+        
+        if not request.form.get("name"):
+            error = 'Name required'
+            return render_template('login.html', error=error)
+                
         userid = str(uuid.uuid4())
         # userid = str(uuid.uuid4().hex)
         room = str(uuid.uuid4())
@@ -32,5 +41,5 @@ def login():
             'room': room
         })
         return redirect("/")
-    else:
-        return render_template("login.html")
+
+    return render_template('login.html', error=error)
