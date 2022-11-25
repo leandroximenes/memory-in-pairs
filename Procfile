@@ -1,1 +1,1 @@
-web $(gunicorn app:app; python websocket.py)
+web: python websocket.py
