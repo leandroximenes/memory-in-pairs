@@ -12,7 +12,7 @@ async def show_time(websocket):
         await asyncio.sleep(1)
 
 async def main():
-    async with websockets.serve(show_time, "localhost", 5678):
+    async with websockets.serve(show_time, host="", port=5678):
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":
