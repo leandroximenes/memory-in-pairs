@@ -3,8 +3,10 @@ import asyncio
 import websockets
 from datetime import datetime
 from pytz import timezone
+import os
+import signal
 
-async def show_time(websocket):
+async def handler(websocket):
     while True:
         format = "%Y-%m-%d %H:%M:%S"
         now_utc = datetime.now(timezone('America/Sao_Paulo'))
@@ -12,8 +14,13 @@ async def show_time(websocket):
         await asyncio.sleep(1)
 
 async def main():
-    async with websockets.serve(show_time, host="", port=5678):
-        await asyncio.Future()  # run forever
+    loop = asyncio.get_running_loop()
+    stop = loop.create_future()
+    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+
+    port = int(os.environ.get("PORT", "5678"))
+    async with websockets.serve(handler, "", port):
+        await stop
 
 if __name__ == "__main__":
     asyncio.run(main())

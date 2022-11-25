@@ -15,13 +15,22 @@
     <div id="bTime" onload="currentTime()"></div>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
-            const address = `ws://${window.location.hostname}:5678/`
-            console.log(address)
-            const websocket = new WebSocket(address);
+            const websocket = new WebSocket(getWebSocketServer());
             websocket.onmessage = ({ data }) => {
                 document.getElementById("sTime").innerHTML = data
             };
         });
+
+        function getWebSocketServer() {
+            console.log('worket')
+            if (window.location.host === "memory-in-pairs.herokuapp.com") {
+                return "wss://websockets-tutorial.herokuapp.com/";
+            } else if (window.location.host === "localhost:5678") {
+                return "ws://localhost:5678/";
+            } else {
+                throw new Error(`Unsupported host: ${window.location.host}`);
+            }
+        }
 
         function currentTime() {
             let date = new Date();
@@ -53,4 +62,5 @@
         currentTime();
     </script>
 </body>
+
 </html>
