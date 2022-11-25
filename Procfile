@@ -1,1 +1,2 @@
-web: $(gunicorn app:app; python websocket.py)
+web: gunicorn app:app
+worker: python websocket.py
