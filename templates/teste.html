@@ -15,7 +15,9 @@
     <div id="bTime" onload="currentTime()"></div>
     <script>
         window.addEventListener("DOMContentLoaded", () => {
-            const websocket = new WebSocket(`ws://${window.location.hostname}:5678/`);
+            const address = `ws://${window.location.hostname}:5678/`
+            console.log(address)
+            const websocket = new WebSocket(address);
             websocket.onmessage = ({ data }) => {
                 document.getElementById("sTime").innerHTML = data
             };
