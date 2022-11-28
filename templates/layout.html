@@ -7,6 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CS50 Final Project: {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+    <script>
+      function getWebSocketServer() {
+          if (window.location.host === "memory-in-pairs.herokuapp.com") {
+              return "wss://memory-in-pairs-ws.herokuapp.com/";
+          } else if (window.location.host === "localhost:5000") {
+              return "ws://localhost:5678/";
+          } else {
+              throw new Error(`Unsupported host: ${window.location.host}`);
+          }
+      }
+    </script> 
 </head>
 
 <body>
@@ -43,12 +54,17 @@
     </header>
 
     <main class="container-fluid py-5 text-center container bg-white max-w-7xl mx-auto">
+        <input type="hidden" name="userId" id="userId" value="{{ session["user_id"] }}" />
+        <input type="hidden" name="userName" id="userName" value="{{ session["user_name"] }}" />
+        <input type="hidden" name="userEmail" id="userEmail" value="{{ session["user_email"] }}" />
         {% block main %}{% endblock %}
     </main>
 
     <footer class="mb-5 small text-center text-muted py-6 ">
         by Leandro Ximenes
     </footer>
+
+
 </body>
 
 </html>
