@@ -6,54 +6,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CS50 Final Project: {% block title %}{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-
-        }
-    </script>
-    <style type="text/tailwindcss">
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-
-        @layer components {
-            .submit-btn {
-                @apply w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700;
-            }
-
-            .label{
-                @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left
-            }
-
-            .text-input{
-                @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-            }
-        }
-      </style>
+    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
 </head>
 
-<body class="bg-gradient-to-r from-sky-500 to-indigo-500">
-    {% if session["user_id"] %}
-    <h1 style="text-align: right">Logout</h1>
-    {% else %}
-    <h1 style="text-align: right">login</h1>
-    {% endif %}
-
-    {% if get_flashed_messages() %}
+<body>
     <header>
-        <div class="alert alert-primary mb-0 text-center" role="alert">
-            {{ get_flashed_messages() | join(" ") }}
-        </div>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg shadow-md py-2 bg-white relative flex items-center w-full justify-between">
+          <div class="px-1 w-3/4 flex flex-wrap items-center justify-between mx-auto">
+            <div class="navbar-collapse collapse grow items-center" id="navbarSupportedContentY">
+              <ul class="navbar-nav mr-auto lg:flex lg:flex-row">
+                <li class="nav-item">
+                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Features</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Pricing</a>
+                </li>
+                <li class="nav-item mb-2 lg:mb-0">
+                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">About</a>
+                </li>
+              </ul>
+            </div>
+            <div class="flex items-center">
+              {% if session["user_id"] %}
+              <h1>Logout</h1>
+              {% else %}
+              <h1>login</h1>
+              {% endif %}
+            </div>
+          </div>
+        </nav>
+        <!-- Navbar -->
     </header>
-    {% endif %}
 
-    <main class="container-fluid py-5 text-center">
+    <main class="container-fluid py-5 text-center container bg-white max-w-7xl mx-auto">
         {% block main %}{% endblock %}
     </main>
 
-    <footer class="mb-5 small text-center text-muted">
-        Data provided by Leandro Ximenes
+    <footer class="mb-5 small text-center text-muted py-6 ">
+        by Leandro Ximenes
     </footer>
 </body>
 

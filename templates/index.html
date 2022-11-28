@@ -1,19 +1,22 @@
-<head>
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+{% extends "layout.html" %}
 
-<body>
-    <div class="App">
-        <header class="App-header">
-            <img src="{{ url_for('static', filename='Octocat.png') }}" class="App-logo" alt="logo" />
-            <p>
-                GitHub Codespaces <span class="heart">♥️</span> Flask
-            </p>
-            <p class="small">
-                Edit <code>templates/index.html</code> and refresh to see your changes!
-            </p>
-        </header>
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+<div>
+    <div class="grid grid-cols-2 gap-4 px-2">
+        <div class="bg-indigo-500 text-left">
+            <h1>Players</h1>
+            <ul>
+                <li>Leandro | leandroj.r.ximenes@gmail.com</li>
+            </ul>
+        </div>
+        <div class="bg-green-500">
+            <h1>Rooms</h1>
+        </div>
     </div>
-</body>
+</div>
 
-</html>
+{% endblock %}
