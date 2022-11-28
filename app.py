@@ -1,7 +1,7 @@
+import secrets
 from flask import Flask, render_template, redirect, session, request
 from helpers import login_required
 from flask_session import Session
-import uuid
 
 app = Flask(__name__)
 
@@ -30,15 +30,13 @@ def login():
             error = 'Name required'
             return render_template('login.html', error=error)
                 
-        userid = str(uuid.uuid4())
-        # userid = str(uuid.uuid4().hex)
-        room = str(uuid.uuid4())
+        userid = secrets.token_hex(16)
         session["user_id"] = userid
-        session["room"] = room
+        session["user_name"] = request.form.get("name")
+        session["user_email"] = request.form.get("email")
         USERS.append({
             'id_user': userid,
-            'name': request.form.get("name"),
-            'room': room
+            'name': request.form.get("name")
         })
         return redirect("/")
 
