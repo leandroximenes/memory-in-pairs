@@ -42,6 +42,11 @@ def login():
 
     return render_template('login.html', error=error)
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+    
 @app.route("/teste")
 @login_required
 def teste():

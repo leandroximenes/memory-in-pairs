@@ -737,6 +737,32 @@ body{
   }
 }
 
+.menu-item{
+  display: block;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgba(75, 85, 99, var(--tw-text-opacity))
+}
+
+.menu-item:hover {
+  --tw-text-opacity: 1;
+  color: rgba(17, 24, 39, var(--tw-text-opacity));
+}
+
+.menu-item:focus {
+  --tw-text-opacity: 1;
+  color: rgba(17, 24, 39, var(--tw-text-opacity));
+}
+
+@media (min-width: 1024px) {
+  .menu-item {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

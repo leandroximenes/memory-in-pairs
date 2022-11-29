@@ -2,67 +2,67 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS50 Final Project: {% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
-    <script>
-      function getWebSocketServer() {
-          if (window.location.host === "memory-in-pairs.herokuapp.com") {
-              return "wss://memory-in-pairs-ws.herokuapp.com/";
-          } else if (window.location.host === "localhost:5000") {
-              return "ws://localhost:5678/";
-          } else {
-              throw new Error(`Unsupported host: ${window.location.host}`);
-          }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS50 Final Project: {% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+  <script>
+    function getWebSocketServer() {
+      if (window.location.host === "memory-in-pairs.herokuapp.com") {
+        return "wss://memory-in-pairs-ws.herokuapp.com/";
+      } else if (window.location.host === "localhost:5000") {
+        return "ws://localhost:5678/";
+      } else {
+        throw new Error(`Unsupported host: ${window.location.host}`);
       }
-    </script> 
+    }
+  </script>
 </head>
 
 <body>
-    <header>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg shadow-md py-2 bg-white relative flex items-center w-full justify-between">
-          <div class="px-1 w-3/4 flex flex-wrap items-center justify-between mx-auto">
-            <div class="navbar-collapse collapse grow items-center" id="navbarSupportedContentY">
-              <ul class="navbar-nav mr-auto lg:flex lg:flex-row">
-                <li class="nav-item">
-                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Features</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Pricing</a>
-                </li>
-                <li class="nav-item mb-2 lg:mb-0">
-                  <a class="nav-link block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-700 focus:text-gray-700 transition duration-150 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">About</a>
-                </li>
-              </ul>
-            </div>
-            <div class="flex items-center">
-              {% if session["user_id"] %}
-              <h1>Logout</h1>
-              {% else %}
-              <h1>login</h1>
-              {% endif %}
-            </div>
-          </div>
-        </nav>
-        <!-- Navbar -->
-    </header>
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg shadow-md py-2 bg-white relative flex items-center w-full justify-between">
+      <div class="px-1 w-3/4 flex flex-wrap items-center justify-between mx-auto">
+        <div class="navbar-collapse collapse grow items-center" id="navbarSupportedContentY">
+          <ul class="navbar-nav mr-auto lg:flex lg:flex-row">
+            <li class="nav-item">
+              <a class="nav-link menu-item" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link menu-item" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link menu-item" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">Pricing</a>
+            </li>
+            <li class="nav-item mb-2 lg:mb-0">
+              <a class="nav-link menu-item" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="light">About</a>
+            </li>
+          </ul>
+        </div>
+        <div class="flex items-center">
+          {% if session["user_id"] %}
+          <a class="menu-item" href="/logout" data-mdb-ripple="true" data-mdb-ripple-color="light">Logout</a>
+          {% else %}
+          <h1>login</h1>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar -->
+  </header>
 
-    <main class="container-fluid py-5 text-center container bg-white max-w-7xl mx-auto">
-        <input type="hidden" name="userId" id="userId" value="{{ session["user_id"] }}" />
-        <input type="hidden" name="userName" id="userName" value="{{ session["user_name"] }}" />
-        <input type="hidden" name="userEmail" id="userEmail" value="{{ session["user_email"] }}" />
-        {% block main %}{% endblock %}
-    </main>
+  <main class="container-fluid py-5 text-center container bg-white max-w-7xl mx-auto">
+    <input type="hidden" name="userId" id="userId" value="{{ session["user_id"] }}" />
+    <input type="hidden" name="userName" id="userName" value="{{ session["user_name"] }}" />
+    <input type="hidden" name="userEmail" id="userEmail" value="{{ session["user_email"] }}" />
+    {% block main %}{% endblock %}
+  </main>
 
-    <footer class="mb-5 small text-center text-muted py-6 ">
-        by Leandro Ximenes
-    </footer>
+  <footer class="mb-5 small text-center text-muted py-6 ">
+    by Leandro Ximenes
+  </footer>
 
 
 </body>
