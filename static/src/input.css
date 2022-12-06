@@ -21,4 +21,7 @@
     .text-input{
         @apply bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
     }
+    .menu-item{
+        @apply block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-900 focus:text-gray-900
+    }
 }
