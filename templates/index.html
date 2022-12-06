@@ -6,35 +6,34 @@ Home
 
 {% block main %}
 <div>
-    <div class="grid grid-cols-2 gap-4 px-2 py-5">
-        <div class="shadow-md">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-5">
+        <div class="shadow-md bg-white py-4">
             <h1 class="text-lg font-bold mb-2">Players</h1>
             <ul id="playerList" class="text-left list-disc ml-10 space-y-3"></ul>
         </div>
-        <div class="shadow-md">
+        <div class="shadow-md bg-white py-4">
             <h1 class="text-lg font-bold mb-2">Rooms</h1>
             <div class="text-right"><button class="small-btn mr-6">+ Create</button></div>
             <ul class="text-left list-disc ml-10 space-y-5">
-                <div>
-                    <li>Lince <button class="small-btn">Join</button></li>
+                <li>Lince <button class="small-btn">Join</button>
                     <ul class="list-disc ml-10">
                         <li>Sara</li>
                     </ul>
-                </div>
-
-                <div>
-                    <li>
-                        Jaguar <button class="small-btn ">Watch</button>
-                        <span class="h-3 w-3">
-                            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75 my-2"></span>
+                </li>
+                <li>
+                    <div class="flex">
+                        Jaguar <button class="small-btn flex ml-2">Watch
+                        <span class="flex h-3 w-3 my-auto ml-2">
+                            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                         </span>
-                    </li>
+                    </button>
+                    </div>
                     <ul class="list-disc ml-10">
                         <li>Marie</li>
                         <li>Hayla</li>
                     </ul>
-                </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -51,20 +50,20 @@ Home
             console.log(data)
             const event = JSON.parse(data);
             switch (event.type) {
-            case "conected":
-                socket.send(JSON.stringify({ action: "loadData", userId: userId, name: userName, email: userEmail }));
-                break;
-            case "responseData":
-                const playerList = document.querySelector("#playerList")
-                playerList.innerHTML = ""
-                for (var i=0; i < event.users.length; i++){
-                    var li = document.createElement('li');
-                    li.innerHTML = event.users[i].name +  " - <span class=\"text-gray-500\">" + event.users[i].email +  "</span>" 
-                    playerList.appendChild(li);
-                }
-                break;
-            default:
-                console.error("unsupported event", event);
+                case "conected":
+                    socket.send(JSON.stringify({ action: "loadData", userId: userId, name: userName, email: userEmail }));
+                    break;
+                case "responseData":
+                    const playerList = document.querySelector("#playerList")
+                    playerList.innerHTML = ""
+                    for (var i = 0; i < event.users.length; i++) {
+                        var li = document.createElement('li');
+                        li.innerHTML = event.users[i].name + " - <span class=\"text-gray-500\">" + event.users[i].email + "</span>"
+                        playerList.appendChild(li);
+                    }
+                    break;
+                default:
+                    console.error("unsupported event", event);
             }
         }
     })
