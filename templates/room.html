@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Room teste
+{% endblock %}
+
+{% block main %}
+<div>
+    <h1 class="text-lg font-bold mb-2">Room: Jaguar</h1>
+    <div class="grid grid-cols-11 gap-2 px-2 py-5">
+        <div class="col-span-5 shadow-md bg-white py-2">
+            <div class="text-lg font-bold pr-2 flex justify-end">
+                <input type="color" id="favcolor" name="favcolor" value="#00cc66" class="w-1/12"><br><br>
+                <span class="mx-2">Leandro</span>
+                <span class="bg-gray-300 rounded-full px-2">2</span>
+            </div>
+        </div>
+        <div class="py-2">
+            <h1 class="text-lg font-bold">Vs</h1>
+        </div>
+        <div class="col-span-5 shadow-md bg-white py-2">
+            <div class="text-lg font-bold pr-2 flex justify-start">
+                <span class="bg-gray-300 rounded-full px-2">3</span>
+                <span class="mx-2">Alê</span>
+                <input type="color" id="favcolor" name="favcolor" value="#9933ff" class="w-1/12"><br><br>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-11 gap-2 px-2">
+        <div class="col-span-3"></div>
+        <div class="shadow-md bg-white w-auto">
+            <p>+</p>
+        </div>
+        <div class="shadow-md bg-white w-auto">
+            <p>-</p>
+        </div>
+        <div></div>
+        <div class="shadow-md bg-white w-auto">
+            <p>+</p>
+        </div>
+        <div class="shadow-md bg-white w-auto">
+            <p>-</p>
+        </div>
+        <div class="col-span-3"></div>
+        
+    </div>
+</div>
+{% endblock %}

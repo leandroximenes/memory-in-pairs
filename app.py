@@ -51,3 +51,8 @@ def logout():
 @login_required
 def teste():
     return render_template("teste.html")
+
+@app.route("/room")
+@login_required
+def room():
+    return render_template("room.html")

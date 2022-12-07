@@ -674,6 +674,7 @@ body{
   margin-bottom: 0px;
   width: -moz-max-content;
   width: max-content;
+  cursor: pointer;
   border-radius: 0.5rem;
   --tw-bg-opacity: 1;
   background-color: rgba(37, 99, 235, var(--tw-bg-opacity))

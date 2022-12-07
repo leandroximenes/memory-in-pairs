@@ -13,7 +13,7 @@
     .small-btn {
         @apply text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 
         focus:outline-none font-medium rounded-lg text-sm text-center
-        w-max py-0 my-0 px-3
+        w-max py-0 my-0 px-3 cursor-pointer
     }
     .label{
         @apply block mb-2 text-sm font-medium text-gray-900  text-left
