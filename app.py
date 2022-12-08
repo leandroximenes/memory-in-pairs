@@ -1,6 +1,6 @@
 import secrets
 from flask import Flask, render_template, redirect, session, request
-from helpers import login_required
+from helpers import login_required, getRandomTitle
 from flask_session import Session
 
 app = Flask(__name__)
@@ -55,4 +55,5 @@ def teste():
 @app.route("/room")
 @login_required
 def room():
-    return render_template("room.html")
+    title = getRandomTitle()
+    return render_template("room.html", title=title)
