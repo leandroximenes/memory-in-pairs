@@ -27,7 +27,6 @@ async def handler(websocket):
     try:
         # Send current state to user
         USERS.add(websocket)
-        await websocket.send(json.dumps({"type": "conected"}))
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
@@ -35,10 +34,15 @@ async def handler(websocket):
                 player = Player(event["userId"], event["name"], event["email"], websocket.id)
                 PLAYERS.append(player)
                 USERS.add(websocket)
-            if event["action"] == "loadData":
+                print(f"registered player: ", player.name)
+                websockets.broadcast(USERS, json.dumps({"type": "PlayerRegisted"}))
+            
+            elif event["action"] == "loadData":
                 websockets.broadcast(USERS, json.dumps({"type": "responseData", "users": getPlayers()}))
-            elif event["action"] == "plus":
-                b = 100
+            
+            elif event["action"] == "HelloServer":
+                print('HelloServer')
+            
             else:
                 print(f"unsupported event: %s", event)
     finally:
@@ -59,6 +63,7 @@ async def main():
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
 
     port = int(os.environ.get("PORT", "5678"))
+    print(f"Starting server on port ", port)
     async with websockets.serve(
             handler,
             host="",

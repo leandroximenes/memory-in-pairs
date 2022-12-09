@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CS50 Final Project: {% block title %}{% endblock %}</title>
   <link rel="stylesheet" href="{{url_for('static',filename='output.css')}}">
-  <script src="{{url_for("static", filename="js/main.js")}}"></script>
 </head>
 
 <body>
@@ -45,6 +44,7 @@
     <input type="hidden" name="userId" id="userId" value="{{ session["user_id"] }}" />
     <input type="hidden" name="userName" id="userName" value="{{ session["user_name"] }}" />
     <input type="hidden" name="userEmail" id="userEmail" value="{{ session["user_email"] }}" />
+    <script src="{{url_for("static", filename="js/main.js")}}"></script>
     {% block main %}{% endblock %}
   </main>
 

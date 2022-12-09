@@ -6,10 +6,28 @@ Home
 
 {% block main %}
 <script>
-    window.addEventListener("DOMContentLoaded", () => {
-        // TODO: Make this work.
-        socket.send(JSON.stringify({ action: "loadData" }));
-    })
+    // socket connection recived from webpack configurated and runing.
+    // first default message is: "PlayerRegisted"
+    
+    socket.onmessage = ({ data }) => {
+        const event = JSON.parse(data);
+        switch (event.type) {
+            case "PlayerRegisted":
+                socket.send(JSON.stringify({ action: "loadData" }));
+                break
+            case "responseData":
+                const playerList = document.querySelector("#playerList")
+                playerList.innerHTML = ""
+                for (var i = 0; i < event.users.length; i++) {
+                    var li = document.createElement('li');
+                    li.innerHTML = `${event.users[i].name} - <span class="text-gray-500">${event.users[i].email}</span>`
+                    playerList.appendChild(li);
+                }
+                break
+            default:
+                console.error("unsupported event", event)
+        }
+    }
 </script>
 <div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-5">
