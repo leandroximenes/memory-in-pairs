@@ -15,13 +15,30 @@ class Player():
         self.name = name
         self.email = email
         self.connection = connection
+        self.room = None
+
+    def __str__(self):
+        return "Player: " + self.name + " " + self.email + " " + self.room
+    
+    def setRoom(self, room):
+        self.room = room
 
 def getPlayers():
     list = []
     for player in PLAYERS:
-        list.append({"name": player.name, "email": player.email })
+        if(player.room == None):
+            list.append({"name": player.name, "email": player.email })
+    
     return list
 
+def getRooms():
+    list = []
+    for player in PLAYERS:
+        if(player.room != None):
+            list.append({"name": player.name, "email": player.email, "room": player.room })
+    
+    return list
+   
 async def handler(websocket):
     global USERS, PLAYERS
     try:
@@ -33,15 +50,21 @@ async def handler(websocket):
             if event["action"] == "registerPlayer":
                 player = Player(event["userId"], event["name"], event["email"], websocket.id)
                 PLAYERS.append(player)
-                USERS.add(websocket)
-                print(f"registered player: ", player.name)
-                websockets.broadcast(USERS, json.dumps({"type": "PlayerRegisted"}))
+                await websocket.send(json.dumps({"type": "conected"}))
             
             elif event["action"] == "loadData":
-                websockets.broadcast(USERS, json.dumps({"type": "responseData", "users": getPlayers()}))
+                websockets.broadcast(USERS, json.dumps({"type": "players", "users": getPlayers()}))
+                websockets.broadcast(USERS, json.dumps({"type": "rooms", "users": getRooms()}))
             
-            elif event["action"] == "HelloServer":
-                print('HelloServer')
+            elif event["action"] == "enterRoom":
+                for player in PLAYERS:
+                    if player.connection == websocket.id:
+                        player.setRoom(event["roomName"])
+                        break
+                    
+                
+                websockets.broadcast(USERS, json.dumps({"type": "players", "users": getPlayers()}))
+                websockets.broadcast(USERS, json.dumps({"type": "rooms", "users": getRooms()}))
             
             else:
                 print(f"unsupported event: %s", event)
@@ -53,7 +76,7 @@ async def handler(websocket):
                 break
 
         USERS.remove(websocket)
-        websockets.broadcast(USERS, json.dumps({"type": "responseData", "users": getPlayers()}))
+        websockets.broadcast(USERS, json.dumps({"type": "players", "users": getPlayers()}))
         
 
 async def main():

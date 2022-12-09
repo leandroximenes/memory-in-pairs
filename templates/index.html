@@ -7,21 +7,65 @@ Home
 {% block main %}
 <script>
     // socket connection recived from webpack configurated and runing.
-    // first default message is: "PlayerRegisted"
-    
+    // first default message is: "conected"
+
     socket.onmessage = ({ data }) => {
         const event = JSON.parse(data);
         switch (event.type) {
-            case "PlayerRegisted":
+            case "conected":
                 socket.send(JSON.stringify({ action: "loadData" }));
                 break
-            case "responseData":
+            case "players":
                 const playerList = document.querySelector("#playerList")
                 playerList.innerHTML = ""
                 for (var i = 0; i < event.users.length; i++) {
                     var li = document.createElement('li');
                     li.innerHTML = `${event.users[i].name} - <span class="text-gray-500">${event.users[i].email}</span>`
                     playerList.appendChild(li);
+                }
+                break
+            case "rooms":
+                const roomList = document.querySelector("#roomList")
+                roomList.innerHTML = ""
+
+                //create a list of rooms
+                let rooms = []
+                event.users.forEach(function (user) {
+                    if (!rooms.includes(user.room)) {
+                        room = { name: user.room, players: [] }
+                        room.players.push(user.name)
+                        rooms.push(room)
+                    } else {
+                        for (var i = 0; i < rooms.length; i++) {
+                            if (rooms[i].name == user.room) {
+                                rooms[i].players.push(user.name)
+                            }
+                        }
+                    }
+                })
+                console.log(rooms)
+
+                //add rooms to html
+                for (var i = 0; i < rooms.length; i++) {
+                    rooms[i].players.map(function (player) {
+                        return `<li>${player}</li>`
+                    })
+
+                    var li = document.createElement('li');
+                    rooms[i].button = rooms[i].players.length == 1
+                        ? `<button class="small-btn">Join</button>`
+                        : `<button class="small-btn">Watch</button>`
+                    rooms[i].listPlayers = rooms[i].players.length == 1
+                        ? `<ul class="list-disc ml-10">
+                            <li>${rooms[i].players[0]}</li>
+                        </ul>`
+                        : `<ul class="list-disc ml-10">
+                            <li>${rooms[i].players[0]}</li>
+                            <li>${rooms[i].players[1]}</li>
+                        </ul>`
+
+                    li.innerHTML = `${rooms[i].name} ${rooms[i].button} ${rooms[i].listPlayers}`
+                    roomList.appendChild(li);
                 }
                 break
             default:
@@ -38,7 +82,7 @@ Home
         <div class="shadow-md bg-white py-4">
             <h1 class="text-lg font-bold mb-2">Rooms</h1>
             <div class="text-right"><a href="/room" class="small-btn mr-6 py-2">+ Create</a></div>
-            <ul class="text-left list-disc ml-10 space-y-5">
+            <ul class="text-left list-disc ml-10 space-y-5" id="roomList">
                 <li>Lince <button class="small-btn">Join</button>
                     <ul class="list-disc ml-10">
                         <li>Sara</li>

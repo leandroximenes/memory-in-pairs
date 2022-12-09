@@ -5,8 +5,26 @@ Room teste
 {% endblock %}
 
 {% block main %}
+<script>
+    // socket connection recived from webpack configurated and runing.
+    // first default message is: "conected"
+    socket.onmessage = ({ data }) => {
+        const event = JSON.parse(data);
+        switch (event.type) {
+            case "conected":
+                let roomName = document.querySelector("#roomName").innerHTML.replace('Room: ', '')
+                socket.send(JSON.stringify({ action: "enterRoom", roomName: roomName  }));
+                break
+            case "roomCreated":
+                
+                break
+            default:
+                console.error("unsupported event", event)
+        }
+    }
+</script>
 <div>
-    <h1 class="text-lg font-bold mb-2">Room: {{ title }}</h1>
+    <h1 class="text-lg font-bold mb-2" id="roomName">Room: {{ title }}</h1>
     <div class="grid grid-cols-11 gap-2 px-2 py-5">
         <div class="col-span-5 shadow-md bg-white py-2">
             <div class="text-lg font-bold pr-2 flex justify-end">
