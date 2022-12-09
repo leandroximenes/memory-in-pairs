@@ -1,0 +1,23 @@
+{
+  "name": "codespaces-flask",
+  "description": "Welcome to your shiny new Codespace running Flask! We've got everything fired up and running for you to explore Flask.",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leandroximenes/memory-in-pairs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.2.4"
+  },
+  "bugs": {
+    "url": "https://github.com/leandroximenes/memory-in-pairs/issues"
+  },
+  "homepage": "https://github.com/leandroximenes/memory-in-pairs#readme"
+}
