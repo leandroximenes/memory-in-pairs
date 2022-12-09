@@ -5,6 +5,12 @@ Home
 {% endblock %}
 
 {% block main %}
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        // TODO: Make this work.
+        socket.send(JSON.stringify({ action: "loadData" }));
+    })
+</script>
 <div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2 py-5">
         <div class="shadow-md bg-white py-4">
@@ -23,11 +29,12 @@ Home
                 <li>
                     <div class="flex">
                         Jaguar <button class="small-btn flex ml-2">Watch
-                        <span class="flex h-3 w-3 my-auto ml-2">
-                            <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                        </span>
-                    </button>
+                            <span class="flex h-3 w-3 my-auto ml-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                        </button>
                     </div>
                     <ul class="list-disc ml-10">
                         <li>Marie</li>

@@ -7,15 +7,16 @@
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/websocket.js":
-/*!*************************************!*\
-  !*** ./src/components/websocket.js ***!
-  \*************************************/
-/***/ (() => {
+/***/ "./src/components/util.js":
+/*!********************************!*\
+  !*** ./src/components/util.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("function getWebSocketServer() {\n    if (window.location.host === \"memory-in-pairs.herokuapp.com\") {\n        return \"wss://memory-in-pairs-ws.herokuapp.com/\";\n    } else if (window.location.host === \"localhost:5000\") {\n        return \"ws://localhost:5678/\";\n    } else {\n        throw new Error(`Unsupported host: ${window.location.host}`);\n    }\n}\n\nwindow.addEventListener(\"DOMContentLoaded\", () => {\n    console.log(getWebSocketServer())\n    const socket = new WebSocket(getWebSocketServer());\n    const userId = document.querySelector(\"#userId\").value\n    const userName = document.querySelector(\"#userName\").value\n    const userEmail = document.querySelector(\"#userEmail\").value\n    socket.onmessage = ({ data }) => {\n        console.log(data)\n        const event = JSON.parse(data);\n        switch (event.type) {\n            case \"conected\":\n                socket.send(JSON.stringify({ action: \"loadData\", userId: userId, name: userName, email: userEmail }));\n                break;\n            case \"responseData\":\n                const playerList = document.querySelector(\"#playerList\")\n                playerList.innerHTML = \"\"\n                for (var i = 0; i < event.users.length; i++) {\n                    var li = document.createElement('li');\n                    li.innerHTML = `${event.users[i].name} - <span class=\"text-gray-500\">${event.users[i].email}</span>`\n                    playerList.appendChild(li);\n                }\n                break;\n            default:\n                console.error(\"unsupported event\", event);\n        }\n    }\n})\n\n//# sourceURL=webpack://codespaces-flask/./src/components/websocket.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"getParameters\": () => (/* binding */ getParameters),\n/* harmony export */   \"getURL\": () => (/* binding */ getURL)\n/* harmony export */ });\nconst getURL = () => {\n    if (window.location.host === \"memory-in-pairs.herokuapp.com\") {\n        return \"wss://memory-in-pairs-ws.herokuapp.com/\";\n    } else if (window.location.host === \"localhost:5000\") {\n        return \"ws://localhost:5678/\";\n    } else {\n        throw new Error(`Unsupported host: ${window.location.host}`);\n    }\n}\n\nconst getParameters = () => {\n    const userId = document.querySelector(\"#userId\").value\n    const userName = document.querySelector(\"#userName\").value\n    const userEmail = document.querySelector(\"#userEmail\").value\n    return {userId, userName, userEmail}\n}\n\n\n\n//# sourceURL=webpack://codespaces-flask/./src/components/util.js?");
 
 /***/ }),
 
@@ -25,8 +26,7 @@ eval("function getWebSocketServer() {\n    if (window.location.host === \"memory
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_websocket_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/websocket.js */ \"./src/components/websocket.js\");\n/* harmony import */ var _components_websocket_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_websocket_js__WEBPACK_IMPORTED_MODULE_0__);\n\n\n//# sourceURL=webpack://codespaces-flask/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/util.js */ \"./src/components/util.js\");\n\n\nwindow.addEventListener(\"DOMContentLoaded\", () => {\n    const { userId, userName, userEmail } = (0,_components_util_js__WEBPACK_IMPORTED_MODULE_0__.getParameters)()\n    window.URL = (0,_components_util_js__WEBPACK_IMPORTED_MODULE_0__.getURL)()\n    window.userId = userId\n    window.userName = userName\n    window.userEmail = userEmail\n\n    const socket = new WebSocket(URL);\n    socket.onmessage = ({ data }) => {\n        const event = JSON.parse(data);\n        switch (event.type) {\n            case \"conected\":\n                socket.send(JSON.stringify({ action: \"registerPlayer\", userId: userId, name: userName, email: userEmail }));\n                console.log(\"Player registered\");\n                break;\n            default:\n                console.error(\"unsupported event\", event);\n        }\n    }\n    window.socket = socket\n})\n\n//# sourceURL=webpack://codespaces-flask/./src/index.js?");
 
 /***/ })
 
@@ -57,18 +57,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _com
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports

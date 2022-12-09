@@ -31,10 +31,11 @@ async def handler(websocket):
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
-            if event["action"] == "loadData":
+            if event["action"] == "registerPlayer":
                 player = Player(event["userId"], event["name"], event["email"], websocket.id)
                 PLAYERS.append(player)
                 USERS.add(websocket)
+            if event["action"] == "loadData":
                 websockets.broadcast(USERS, json.dumps({"type": "responseData", "users": getPlayers()}))
             elif event["action"] == "plus":
                 b = 100
