@@ -4,7 +4,11 @@
   "version": "1.0.0",
   "main": "tailwind.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compilecss": "npx tailwindcss-cli -i ./src/input.css -o ../static/output.css",
+    "dev": "webpack --mode=development",
+    "watch": "webpack --mode=development --watch",
+    "prod": "webpack --mode=production"
   },
   "repository": {
     "type": "git",
@@ -14,7 +18,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-manifest-plugin": "^5.0.0"
   },
   "bugs": {
     "url": "https://github.com/leandroximenes/memory-in-pairs/issues"
