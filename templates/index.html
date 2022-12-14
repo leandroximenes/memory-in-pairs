@@ -10,40 +10,43 @@ Home
     // first default message is: "conected"
 
     socket.onmessage = ({ data }) => {
-        const event = JSON.parse(data);
+        const event = JSON.parse(data)
         switch (event.type) {
             case "conected":
-                socket.send(JSON.stringify({ action: "loadData" }));
+                socket.send(JSON.stringify({ action: "loadData" }))
                 break
             case "players":
-                const playerList = document.querySelector("#playerList")
-                playerList.innerHTML = ""
-                for (var i = 0; i < event.users.length; i++) {
-                    var li = document.createElement('li');
-                    li.innerHTML = `${event.users[i].name} - <span class="text-gray-500">${event.users[i].email}</span>`
-                    playerList.appendChild(li);
-                }
-                break
-            case "rooms":
-                const roomList = document.querySelector("#roomList")
-                roomList.innerHTML = ""
-
                 //create a list of rooms
                 let rooms = []
+                let playersWainting = []
                 event.users.forEach(function (user) {
-                    if (!rooms.includes(user.room)) {
-                        room = { name: user.room, players: [] }
-                        room.players.push(user.name)
-                        rooms.push(room)
+                    if (user.room == null) {
+                        playersWainting.push(user)
                     } else {
-                        for (var i = 0; i < rooms.length; i++) {
-                            if (rooms[i].name == user.room) {
-                                rooms[i].players.push(user.name)
+                        if (!rooms.includes(user.room)) {
+                            room = { name: user.room, players: [] }
+                            room.players.push(user.name)
+                            rooms.push(room)
+                        } else {
+                            for (var i = 0; i < rooms.length; i++) {
+                                if (rooms[i].name == user.room) {
+                                    rooms[i].players.push(user.name)
+                                }
                             }
                         }
                     }
                 })
-                console.log(rooms)
+
+                const playerList = document.querySelector("#playerList")
+                playerList.innerHTML = ""
+                for (var i = 0; i < playersWainting.length; i++) {
+                    var li = document.createElement('li')
+                    li.innerHTML = `${playersWainting[i].name} - <span class="text-gray-500">${playersWainting[i].email}</span>`
+                    playerList.appendChild(li)
+                }
+
+                const roomList = document.querySelector("#roomList")
+                roomList.innerHTML = ""
 
                 //add rooms to html
                 for (var i = 0; i < rooms.length; i++) {
@@ -51,7 +54,7 @@ Home
                         return `<li>${player}</li>`
                     })
 
-                    var li = document.createElement('li');
+                    var li = document.createElement('li')
                     rooms[i].button = rooms[i].players.length == 1
                         ? `<button class="small-btn">Join</button>`
                         : `<button class="small-btn">Watch</button>`
@@ -65,7 +68,7 @@ Home
                         </ul>`
 
                     li.innerHTML = `${rooms[i].name} ${rooms[i].button} ${rooms[i].listPlayers}`
-                    roomList.appendChild(li);
+                    roomList.appendChild(li)
                 }
                 break
             default:
@@ -83,26 +86,6 @@ Home
             <h1 class="text-lg font-bold mb-2">Rooms</h1>
             <div class="text-right"><a href="/room" class="small-btn mr-6 py-2">+ Create</a></div>
             <ul class="text-left list-disc ml-10 space-y-5" id="roomList">
-                <li>Lince <button class="small-btn">Join</button>
-                    <ul class="list-disc ml-10">
-                        <li>Sara</li>
-                    </ul>
-                </li>
-                <li>
-                    <div class="flex">
-                        Jaguar <button class="small-btn flex ml-2">Watch
-                            <span class="flex h-3 w-3 my-auto ml-2">
-                                <span
-                                    class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                            </span>
-                        </button>
-                    </div>
-                    <ul class="list-disc ml-10">
-                        <li>Marie</li>
-                        <li>Hayla</li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>
