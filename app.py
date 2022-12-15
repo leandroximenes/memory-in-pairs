@@ -1,10 +1,8 @@
 import secrets
 from flask import Flask, render_template, redirect, session, request
-from helpers import login_required, getRandomTitle
+from helpers import login_required, getRandomTitle, getImagesList
 from flask_session import Session
-import os
-import hashlib
-import random
+from cs50 import SQL
 
 
 app = Flask(__name__)
@@ -14,7 +12,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-USERS = []
+# Configure CS50 Library to use SQLite database
+db = SQL("sqlite:///memory.db")
 
 @app.route("/")
 @login_required
@@ -38,10 +37,6 @@ def login():
         session["user_id"] = userid
         session["user_name"] = request.form.get("name")
         session["user_email"] = request.form.get("email")
-        USERS.append({
-            'id_user': userid,
-            'name': request.form.get("name")
-        })
         return redirect("/")
 
     return render_template('login.html', error=error)
@@ -59,20 +54,22 @@ def teste():
 @app.route("/room", methods = ['GET'])
 @login_required
 def room():
-    title = request.args.get('name', getRandomTitle())
+    title = None
+    imageList = None
 
-    images = os.listdir('static/img')
-    images.remove('card.png')
-    images.remove('CS50.png')
+    # create a room
+    if(request.args.get('name') == None):
+        title = getRandomTitle()
+        imageList = getImagesList()
 
-    imageList = []
-    for i in range(len(images)):
-        hash = hashlib.md5().hexdigest()
-        firstpart, secondpart = hash[:len(hash)//2], hash[len(hash)//2:]
-        imageList.append({"image": images[i], "hash": firstpart})
-        imageList.append({"image": images[i], "hash": secondpart})
-        
-    random.shuffle(imageList)
+        idRoom = db.execute("INSERT INTO rooms (title) VALUES(?)", title)
+        for key, image in enumerate(imageList):
+            db.execute("INSERT INTO images (id_room, file, half_hash, full_hash, seq) VALUES(?, ?, ?, ? ,?)",
+                idRoom, image["file"], image["half_hash"], image["full_hash"], key)
 
+    # get in a room
+    else:
+        title = request.args.get('name')
+        imageList =  db.execute("SELECT * FROM images WHERE id_room = (SELECT id FROM rooms WHERE title = ?) ORDER BY seq", title)
 
     return render_template("room.html", title=title, imageList=imageList)

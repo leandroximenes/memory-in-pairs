@@ -22,20 +22,21 @@ Room teste
             </div>
         </div>
     </div>
-    <div class="grid gap-2 grid-cols-4 lg:grid-cols-7 shadow-md bg-white w-auto p-2" id="playerSpace">
+    <div class="grid gap-2 grid-cols-4 lg:grid-cols-7 shadow-md bg-white w-auto p-2" style="display: none;"
+        id="playerSpace">
         {%for item in imageList%}
-            <img class="card" data-card="{{ item.image }}" src="/static/img/{{ item.image }}" onclick="chngimg(this)">
+        <img class="card" data-card="{{ item.file }}" data-hash="{{ item.hash }}" src="/static/img/{{ item.file }}">
         {%endfor%}
         <img class="p-2 rounded-lg shadow-lg bg-gray-300 invisible lg:visible" src="/static/img/CS50.png">
     </div>
 </div>
 
 <script>
-     document.addEventListener("DOMContentLoaded", function(e) {
-        document.querySelectorAll('.card').forEach(el => {
-            el.src = '/static/img/card.png';
-        });
-    });
+    document.onreadystatechange = () => {
+        if (document.readyState === "complete") {
+            document.querySelector('#playerSpace').style.display = "grid";
+        }
+    };
 
     // socket connection recived from webpack configurated and runing.
     // first default message is: "conected"
@@ -46,12 +47,13 @@ Room teste
         switch (event.type) {
             case "conected":
                 socket.send(JSON.stringify({ action: "enterRoom", roomName: roomName }));
-                // document.querySelector('#player0space .plus').addEventListener("click",
-                //     () => socket.send(JSON.stringify({ action: "addScore" }))
-                // );
-                // document.querySelector('#player1space .plus').addEventListener("click",
-                //     () => socket.send(JSON.stringify({ action: "addScore" }))
-                // );
+                document.querySelectorAll('.card').forEach(card => {
+                    card.addEventListener("click",
+                        function (el) {
+                            el.src = el.src.indexOf('card.png') != -1 ? '/static/img/' + el.dataset.card : '/static/img/card.png';
+                           console.log('here')
+                        });
+                });
                 break
             case "publicInfo":
                 let players = []
@@ -88,7 +90,7 @@ Room teste
     }
 
     function chngimg(el) {
-        el.src = el.src.indexOf('card.png') != -1 ? '/static/img/' + el.dataset.card : '/static/img/card.png';
+        
     }
 </script>
 {% endblock %}
