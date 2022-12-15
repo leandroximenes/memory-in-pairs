@@ -2,6 +2,10 @@ import secrets
 from flask import Flask, render_template, redirect, session, request
 from helpers import login_required, getRandomTitle
 from flask_session import Session
+import os
+import hashlib
+import random
+
 
 app = Flask(__name__)
 
@@ -56,7 +60,19 @@ def teste():
 @login_required
 def room():
     title = request.args.get('name', getRandomTitle())
-    print(title)
+
+    images = os.listdir('static/img')
+    images.remove('card.png')
+    images.remove('CS50.png')
+
+    imageList = []
+    for i in range(len(images)):
+        hash = hashlib.md5().hexdigest()
+        firstpart, secondpart = hash[:len(hash)//2], hash[len(hash)//2:]
+        imageList.append({"image": images[i], "hash": firstpart})
+        imageList.append({"image": images[i], "hash": secondpart})
         
-    print('ok')
-    return render_template("room.html", title=title)
+    random.shuffle(imageList)
+
+
+    return render_template("room.html", title=title, imageList=imageList)

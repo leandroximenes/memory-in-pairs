@@ -24,4 +24,7 @@
     .menu-item{
         @apply block pr-2 lg:px-2 py-2 text-gray-600 hover:text-gray-900 focus:text-gray-900
     }
+    .card{
+        @apply p-2 rounded-lg shadow-lg bg-gray-300
+    }
 }
