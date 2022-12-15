@@ -17,9 +17,10 @@ class Player():
         self.email = email
         self.connection = connection
         self.room = None
+        self.score = 0
 
     def __str__(self):
-        return "Player: " + self.name + " " + self.email + " " + self.room
+        return "Player: " + self.name + " " + self.email + " " + self.room + " " + self.score
 
     def setRoom(self, room):
         self.room = room
@@ -31,7 +32,8 @@ def getPlayers():
         list.append({
             "name": player.name,
             "email": player.email,
-            "room": player.room
+            "room": player.room,
+            "score": player.score
         })
 
     return list
@@ -55,14 +57,14 @@ async def handler(websocket):
                         inArray = True
                         break
 
-                if(not inArray):  
+                if (not inArray):
                     PLAYERS.append(player)
 
                 await websocket.send(json.dumps({"type": "conected"}))
 
             elif event["action"] == "loadData":
                 websockets.broadcast(USERS, json.dumps(
-                    {"type": "players", "users": getPlayers()}))
+                    {"type": "publicInfo", "users": getPlayers()}))
 
             elif event["action"] == "enterRoom":
                 for player in PLAYERS:
@@ -71,7 +73,7 @@ async def handler(websocket):
                         break
 
                 websockets.broadcast(USERS, json.dumps(
-                    {"type": "players", "users": getPlayers()}
+                    {"type": "publicInfo", "users": getPlayers()}
                 ))
 
             else:

@@ -5,40 +5,20 @@ Room teste
 {% endblock %}
 
 {% block main %}
-<script>
-    // socket connection recived from webpack configurated and runing.
-    // first default message is: "conected"
-    socket.onmessage = ({ data }) => {
-        const event = JSON.parse(data);
-        switch (event.type) {
-            case "conected":
-                let roomName = document.querySelector("#roomName").innerHTML.replace('Room: ', '')
-                socket.send(JSON.stringify({ action: "enterRoom", roomName: roomName  }));
-                break
-            case "roomCreated":
-                
-                break
-            default:
-                console.error("unsupported event", event)
-        }
-    }
-</script>
 <div>
     <h1 class="text-lg font-bold mb-2" id="roomName">Room: {{ title }}</h1>
+    <a href="/" class="small-btn mr-6 py-2">Leave room</a>
     <div class="grid grid-cols-11 gap-2 px-2 py-5">
         <div class="col-span-5 shadow-md bg-white py-2">
-            <div class="text-lg font-bold pr-2 flex justify-end">
-                <span class="mx-2">Leandro</span>
-                <span class="bg-gray-300 rounded-full px-2">0</span>
+            <div class="text-lg font-bold pr-2 flex justify-end" id="player0">
+
             </div>
         </div>
         <div class="py-2">
             <h1 class="text-lg font-bold">Vs</h1>
         </div>
         <div class="col-span-5 shadow-md bg-white py-2">
-            <div class="text-lg font-bold pr-2 flex justify-start">
-                <span class="bg-gray-300 rounded-full px-2 ml-2">0</span>
-                <span class="mx-2">Alê</span>
+            <div class="text-lg font-bold pr-2 flex justify-start" id="player1">
             </div>
         </div>
     </div>
@@ -58,7 +38,52 @@ Room teste
             <p>-</p>
         </div>
         <div class="col-span-3"></div>
-        
+
     </div>
 </div>
+<script>
+    // socket connection recived from webpack configurated and runing.
+    // first default message is: "conected"
+    // players => default broadcast message
+    let roomName = document.querySelector("#roomName").innerHTML.replace('Room: ', '')
+    let players = []
+    socket.onmessage = ({ data }) => {
+        const event = JSON.parse(data);
+        switch (event.type) {
+            case "conected":
+                socket.send(JSON.stringify({ action: "enterRoom", roomName: roomName }));
+                break
+            case "publicInfo":
+                if(players.length < 2){
+                    players = event.users.filter(user => user.room == roomName)
+                }
+                for (let i = 0; i < players.length; i++) {
+                    setPlayer(players[i].name, players[i].score, i)
+                }
+                break
+            default:
+                console.error("unsupported event", event.type)
+        }
+    }
+
+    function setPlayer(name, score, order) {
+        let spanName = document.createElement("span")
+        spanName.classList.add('mx-2');
+        spanName.innerHTML = name;
+
+        let spanScore = document.createElement("span")
+        spanScore.classList.add('bg-gray-300', 'rounded-full', 'px-2')
+        spanScore.innerHTML = score;
+
+        let div = document.querySelector("#player" + order)
+        div.innerHTML = ""
+        if (order == 0) {
+            div.append(spanName)
+            div.append(spanScore)
+        } else {
+            div.append(spanScore)
+            div.append(spanName)
+        }
+    }
+</script>
 {% endblock %}

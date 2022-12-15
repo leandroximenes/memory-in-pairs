@@ -15,24 +15,20 @@ Home
             case "conected":
                 socket.send(JSON.stringify({ action: "loadData" }))
                 break
-            case "players":
+            case "publicInfo":
                 //create a list of rooms
                 let rooms = []
                 let playersWainting = []
+                console.log(event.users)
                 event.users.forEach(function (user) {
                     if (user.room == null) {
                         playersWainting.push(user)
                     } else {
-                        if (!rooms.includes(user.room)) {
-                            room = { name: user.room, players: [] }
-                            room.players.push(user.name)
-                            rooms.push(room)
+                        let exitingRoom = rooms.find(room => room.name == user.room)
+                        if(exitingRoom){
+                            exitingRoom.players.push(user)
                         } else {
-                            for (var i = 0; i < rooms.length; i++) {
-                                if (rooms[i].name == user.room) {
-                                    rooms[i].players.push(user.name)
-                                }
-                            }
+                            rooms.push({ name: user.room, players: [user] })
                         }
                     }
                 })
@@ -49,6 +45,7 @@ Home
                 roomList.innerHTML = ""
 
                 //add rooms to html
+                console.log(rooms)
                 for (var i = 0; i < rooms.length; i++) {
                     rooms[i].players.map(function (player) {
                         return `<li>${player}</li>`
@@ -56,15 +53,16 @@ Home
 
                     var li = document.createElement('li')
                     rooms[i].button = rooms[i].players.length == 1
-                        ? `<button class="small-btn">Join</button>`
+                        ? ` <a href="/room?name=${rooms[i].name}" class="small-btn">Join</a>`
                         : `<button class="small-btn">Watch</button>`
+
                     rooms[i].listPlayers = rooms[i].players.length == 1
                         ? `<ul class="list-disc ml-10">
-                            <li>${rooms[i].players[0]}</li>
+                            <li>${rooms[i].players[0].name}</li>
                         </ul>`
                         : `<ul class="list-disc ml-10">
-                            <li>${rooms[i].players[0]}</li>
-                            <li>${rooms[i].players[1]}</li>
+                            <li>${rooms[i].players[0].score} - ${rooms[i].players[0].name}</li>
+                            <li>${rooms[i].players[1].score} - ${rooms[i].players[1].name}</li>
                         </ul>`
 
                     li.innerHTML = `${rooms[i].name} ${rooms[i].button} ${rooms[i].listPlayers}`

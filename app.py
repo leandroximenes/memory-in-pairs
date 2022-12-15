@@ -52,8 +52,11 @@ def logout():
 def teste():
     return render_template("teste.html")
 
-@app.route("/room")
+@app.route("/room", methods = ['GET'])
 @login_required
 def room():
-    title = getRandomTitle()
+    title = request.args.get('name', getRandomTitle())
+    print(title)
+        
+    print('ok')
     return render_template("room.html", title=title)
