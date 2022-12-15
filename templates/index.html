@@ -8,7 +8,7 @@ Home
 <script>
     // socket connection recived from webpack configurated and runing.
     // first default message is: "conected"
-
+     // publicInfo => default broadcast message
     socket.onmessage = ({ data }) => {
         const event = JSON.parse(data)
         switch (event.type) {
@@ -19,7 +19,6 @@ Home
                 //create a list of rooms
                 let rooms = []
                 let playersWainting = []
-                console.log(event.users)
                 event.users.forEach(function (user) {
                     if (user.room == null) {
                         playersWainting.push(user)
@@ -45,7 +44,6 @@ Home
                 roomList.innerHTML = ""
 
                 //add rooms to html
-                console.log(rooms)
                 for (var i = 0; i < rooms.length; i++) {
                     rooms[i].players.map(function (player) {
                         return `<li>${player}</li>`

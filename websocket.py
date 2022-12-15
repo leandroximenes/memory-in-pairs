@@ -20,11 +20,13 @@ class Player():
         self.score = 0
 
     def __str__(self):
-        return "Player: " + self.name + " " + self.email + " " + self.room + " " + self.score
+        return "Player: " + self.name + " " + self.email + " " + self.room + " " + str(self.score)
 
     def setRoom(self, room):
         self.room = room
 
+    def setScore(self, score, ):
+        self.score = self.score + score
 
 def getPlayers():
     list = []
@@ -33,7 +35,7 @@ def getPlayers():
             "name": player.name,
             "email": player.email,
             "room": player.room,
-            "score": player.score
+            "score": player.score,
         })
 
     return list
@@ -75,6 +77,16 @@ async def handler(websocket):
                 websockets.broadcast(USERS, json.dumps(
                     {"type": "publicInfo", "users": getPlayers()}
                 ))
+            
+            elif event["action"] == "addScore":
+                for player in PLAYERS:
+                    if player.connection == websocket.id:
+                        player.setScore(1)
+                        break
+
+                websockets.broadcast(USERS, json.dumps(
+                    {"type": "publicInfo", "users": getPlayers()}
+                ))
 
             else:
                 print(f"unsupported event: %s", event)
@@ -87,7 +99,7 @@ async def handler(websocket):
 
         USERS.remove(websocket)
         websockets.broadcast(USERS, json.dumps(
-            {"type": "players", "users": getPlayers()}))
+            {"type": "publicInfo", "users": getPlayers()}))
 
 
 async def main():

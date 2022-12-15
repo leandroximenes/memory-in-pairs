@@ -23,42 +23,45 @@ Room teste
         </div>
     </div>
     <div class="grid grid-cols-11 gap-2 px-2">
-        <div class="col-span-3"></div>
-        <div class="shadow-md bg-white w-auto">
-            <p>+</p>
-        </div>
-        <div class="shadow-md bg-white w-auto">
-            <p>-</p>
+        <div class="col-span-5 shadow-md bg-white w-auto p-2" id="player0space">
+            <div class="grid grid-cols-8 gap-2 px-2">
+                <div class="col-span-7"></div>
+                <div class="bg-gray-300 plus">+</div>
+            </div>
         </div>
         <div></div>
-        <div class="shadow-md bg-white w-auto">
-            <p>+</p>
+        <div class="col-span-5 shadow-md bg-white w-auto p-2" id="player1space">
+            <div class="grid grid-cols-8 gap-2 px-2">
+                <div class="bg-gray-300 plus">+</div>
+                <div class="col-span-7"></div>
+            </div>
         </div>
-        <div class="shadow-md bg-white w-auto">
-            <p>-</p>
-        </div>
-        <div class="col-span-3"></div>
-
     </div>
 </div>
 <script>
     // socket connection recived from webpack configurated and runing.
     // first default message is: "conected"
-    // players => default broadcast message
+    // publicInfo => default broadcast message
     let roomName = document.querySelector("#roomName").innerHTML.replace('Room: ', '')
-    let players = []
     socket.onmessage = ({ data }) => {
         const event = JSON.parse(data);
         switch (event.type) {
             case "conected":
                 socket.send(JSON.stringify({ action: "enterRoom", roomName: roomName }));
+                document.querySelector('#player0space .plus').addEventListener("click",
+                    () => socket.send(JSON.stringify({ action: "addScore" }))
+                );
+                document.querySelector('#player1space .plus').addEventListener("click",
+                    () => socket.send(JSON.stringify({ action: "addScore" }))
+                );
                 break
             case "publicInfo":
-                if(players.length < 2){
+                let players = []
+                if (players.length < 2) {
                     players = event.users.filter(user => user.room == roomName)
                 }
                 for (let i = 0; i < players.length; i++) {
-                    setPlayer(players[i].name, players[i].score, i)
+                    setPlayer(players[i], i)
                 }
                 break
             default:
@@ -66,14 +69,14 @@ Room teste
         }
     }
 
-    function setPlayer(name, score, order) {
+    function setPlayer(player, order) {
         let spanName = document.createElement("span")
         spanName.classList.add('mx-2');
-        spanName.innerHTML = name;
+        spanName.innerHTML = player.name;
 
         let spanScore = document.createElement("span")
         spanScore.classList.add('bg-gray-300', 'rounded-full', 'px-2')
-        spanScore.innerHTML = score;
+        spanScore.innerHTML = player.score;
 
         let div = document.querySelector("#player" + order)
         div.innerHTML = ""
@@ -84,6 +87,7 @@ Room teste
             div.append(spanScore)
             div.append(spanName)
         }
+        
     }
 </script>
 {% endblock %}

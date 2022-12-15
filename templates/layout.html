@@ -16,7 +16,7 @@
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl px-4 md:px-6 py-2.5">
         <a href="https://flowbite.com" class="flex items-center">
           <img src="{{url_for('static',filename='logo.svg')}}" class="h-6 mr-3 sm:h-9" alt="Flowbite Logo" />
-          <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+          <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Hi, {{ session["user_name"] }}</span>
         </a>
         <div class="flex items-center">
           <a href="zwa.me/+5561991341099" class="mr-6 text-sm font-medium text-gray-500 dark:text-white hover:underline"> 🇧🇷 (55) 61 9134 1099</a>
