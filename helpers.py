@@ -2,7 +2,7 @@ from flask import redirect, session
 from functools import wraps
 import random
 import os
-import hashlib
+import uuid
 
 def login_required(f):
     """
@@ -36,7 +36,7 @@ def getImagesList():
 
     imageList = []
     for i in range(len(images)):
-        hash = hashlib.md5().hexdigest()
+        hash = uuid.uuid4().hex
         firstpart, secondpart = hash[:len(hash)//2], hash[len(hash)//2:]
         imageList.append({"file": images[i], "half_hash": firstpart, "full_hash": hash})
         imageList.append({"file": images[i], "half_hash": secondpart, "full_hash": hash})

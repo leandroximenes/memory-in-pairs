@@ -7,7 +7,6 @@ import websockets
 USERS = set()
 PLAYERS = []
 
-
 class Player():
     def __init__(self, userId, name, email, connection):   # constructor function using self
         self.userId = userId
@@ -18,7 +17,7 @@ class Player():
         self.score = 0
 
     def __str__(self):
-        return "Player: " + self.name + " " + self.email + " " + self.room + " " + str(self.score)
+        return "Player: " + self.name + " " + self.email  + " " + str(self.connection) + " " + str(self.score)
 
     def setRoom(self, room):
         self.room = room
@@ -47,6 +46,7 @@ async def handler(websocket):
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
+
             if event["action"] == "registerPlayer":
                 player = Player(event["userId"], event["name"],
                                 event["email"], websocket.id)
@@ -67,6 +67,7 @@ async def handler(websocket):
                     {"type": "publicInfo", "users": getPlayers()}))
 
             elif event["action"] == "enterRoom":
+
                 for player in PLAYERS:
                     if player.connection == websocket.id:
                         player.setRoom(event["roomName"])
@@ -75,7 +76,7 @@ async def handler(websocket):
                 websockets.broadcast(USERS, json.dumps(
                     {"type": "publicInfo", "users": getPlayers()}
                 ))
-            
+
             elif event["action"] == "addScore":
                 for player in PLAYERS:
                     if player.connection == websocket.id:
@@ -86,6 +87,21 @@ async def handler(websocket):
                     {"type": "publicInfo", "users": getPlayers()}
                 ))
 
+            elif event["action"] == "move":
+                otherPlayerConnection = None
+                for player in PLAYERS:
+                    if player.connection != websocket.id and player.room == event["roomName"]:
+                        otherPlayerConnection = player.connection
+                        break
+
+                for user in USERS:
+                    if user.id == otherPlayerConnection:
+                        await user.send(json.dumps({
+                            "type": "cardMoved",
+                            "halfhash":  event["card"],
+                            "changeTurn": event["changeTurn"]
+                        }))
+                        break
             else:
                 print(f"unsupported event: %s", event)
     finally:

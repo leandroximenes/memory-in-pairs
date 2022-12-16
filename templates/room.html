@@ -11,7 +11,6 @@ Room teste
     <div class="grid grid-cols-11 gap-2 px-2 py-5">
         <div class="col-span-5 shadow-md bg-white py-2">
             <div class="text-lg font-bold pr-2 flex justify-end" id="player0">
-
             </div>
         </div>
         <div class="py-2">
@@ -25,7 +24,8 @@ Room teste
     <div class="grid gap-2 grid-cols-4 lg:grid-cols-7 shadow-md bg-white w-auto p-2" style="display: none;"
         id="playerSpace">
         {%for item in imageList%}
-        <img class="card" data-card="{{ item.file }}" data-hash="{{ item.hash }}" src="/static/img/{{ item.file }}">
+        <img class="card" data-hash="false" data-card="{{ item.file }}" data-halfhash="{{ item.half_hash }}"
+            data-fullhash="{{ item.full_hash }}" src="/static/img/{{ item.file }}">
         {%endfor%}
         <img class="p-2 rounded-lg shadow-lg bg-gray-300 invisible lg:visible" src="/static/img/CS50.png">
     </div>
@@ -42,26 +42,121 @@ Room teste
     // first default message is: "conected"
     // publicInfo => default broadcast message
     let roomName = document.querySelector("#roomName").innerHTML.replace('Room: ', '')
+
+    // global variables
+    let cardsInUse = []
+    let matched = []
+    let myTurn = isOwner()
+
     socket.onmessage = ({ data }) => {
         const event = JSON.parse(data);
         switch (event.type) {
             case "conected":
                 socket.send(JSON.stringify({ action: "enterRoom", roomName: roomName }));
                 document.querySelectorAll('.card').forEach(card => {
+                    // set all cards to default image
+                    card.src = '/static/img/card.png'
                     card.addEventListener("click",
-                        function (el) {
-                            el.src = el.src.indexOf('card.png') != -1 ? '/static/img/' + el.dataset.card : '/static/img/card.png';
-                           console.log('here')
+                        function (e) {
+                            // e.bubbles diferent from true when click is triggered by socket.
+                            // True cliked and False socket
+                            if (!myTurn && e.bubbles) {
+                                return
+                            }
+                            // clicked a non image card
+                            if (this.src.indexOf('card.png') != -1) {
+                                if (cardsInUse.length == 0) {
+                                    this.src = '/static/img/' + this.dataset.card
+                                    cardsInUse.push(this.dataset.card)
+                                    // CardMove
+
+                                } else if (cardsInUse.length == 1) {
+                                    this.src = '/static/img/' + this.dataset.card
+                                    cardsInUse.push(this.dataset.card)
+                                    // CardMove
+
+                                    //if cards are mached
+                                    if (cardsInUse[0] == cardsInUse[1]) {
+                                        matched.push(cardsInUse[0])
+                                        cardsInUse = []
+                                        if (e.bubbles) {
+                                            socket.send(JSON.stringify({ action: "addScore" }));
+                                        }
+                                    } else {
+                                        setTimeout(() => {
+                                            document.querySelectorAll('.card').forEach(sCard => {
+                                                if (sCard.dataset.card == cardsInUse[0] || sCard.dataset.card == cardsInUse[1]) {
+                                                    sCard.src = '/static/img/card.png'
+                                                }
+                                            })
+                                            cardsInUse = []
+                                        }, 1000);
+                                    }
+                                }
+                            } else {
+                                if (matched.indexOf(this.dataset.card) != -1) {
+                                    return
+                                }
+                                this.src = '/static/img/card.png'
+                                index = cardsInUse.indexOf(this.dataset.card)
+                                if (index > -1) {
+                                    cardsInUse.splice(index, 1);
+                                }
+                            }
+                            if (e.bubbles) {
+                                if (cardsInUse.length == 2) {
+                                    invertTurn()
+                                }
+                                socket.send(JSON.stringify({
+                                    action: "move",
+                                    roomName: roomName,
+                                    card: this.dataset.halfhash,
+                                    changeTurn: cardsInUse.length == 2
+                                }
+                                ));
+                            }
                         });
                 });
                 break
             case "publicInfo":
-                let players = []
-                if (players.length < 2) {
-                    players = event.users.filter(user => user.room == roomName)
-                }
+                document.querySelector("#player0").innerHTML = ''
+                document.querySelector("#player1").innerHTML = ''
+                let players = event.users.filter(user => user.room == roomName)
+
                 for (let i = 0; i < players.length; i++) {
                     setPlayer(players[i], i)
+                }
+
+                document.querySelector('#player0').children[0].classList.toggle("bg-green-300");
+
+                if (players.length == 2) {
+                    if(isOwner()){
+                        if (myTurn){
+                            document.querySelector('#player0').children[0].classList.add("bg-green-300");
+                            document.querySelector('#player1').children[1].classList.remove("bg-green-300");
+                        }
+                        else{
+                            document.querySelector('#player0').children[0].classList.remove("bg-green-300");
+                            document.querySelector('#player1').children[1].classList.add("bg-green-300");
+                        }
+                    }else{
+                        if (myTurn){
+                            document.querySelector('#player0').children[0].classList.remove("bg-green-300");
+                            document.querySelector('#player1').children[1].classList.add("bg-green-300");
+                        }
+                        else{
+                            document.querySelector('#player0').children[0].classList.add("bg-green-300");
+                            document.querySelector('#player1').children[1].classList.remove("bg-green-300");
+                        }
+                    }
+
+                }
+
+                break
+            case "cardMoved":
+                cardclick(event.halfhash)
+                if (event.changeTurn) {
+                    invertTurn()
                 }
                 break
             default:
@@ -89,8 +184,29 @@ Room teste
         }
     }
 
-    function chngimg(el) {
-        
+    function cardclick(halfHash) {
+        let card = null
+        var evt = new Event("click", { fromWebsocet: true })
+        document.querySelectorAll('.card').forEach(sCard => {
+            if (sCard.dataset.halfhash == halfHash) {
+                card = sCard
+            }
+        })
+        card.dispatchEvent(evt)
+    }
+
+    function isOwner() {
+        if ((new URLSearchParams(window.location.search)).get('name')) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    function invertTurn() {
+        myTurn = !myTurn
+        document.querySelector('#player0').children[0].classList.toggle("bg-green-300");
+        document.querySelector('#player1').children[1].classList.toggle("bg-green-300");
     }
 </script>
 {% endblock %}
