@@ -2,7 +2,6 @@ import { getURL, getParameters } from './components/util.js';
 
 const { userId, userName, userEmail } = getParameters()
 window.URL = getURL()
-console.log(window.URL)
 window.userId = userId
 window.userName = userName
 window.userEmail = userEmail
