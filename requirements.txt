@@ -1,5 +1,7 @@
 Flask
-flask_session
+Flask-Session
 gunicorn 
 websockets
 cs50
+psycopg2
+requests
