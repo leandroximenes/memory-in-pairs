@@ -48,7 +48,8 @@ def getImagesList():
 
 
 def getStringDB():
-    strConn = "sqlite:///memory.db"
+    strConn = "postgresql://gszsssrnqlemqf:58f8e27182d1380dfb561540081d4cf651efb1a1a93ca830d55adb1d6a415621@ec2-34-231-63-30.compute-1.amazonaws.com:5432/dfv11i60s07f32"
+    return strConn
     if (os.environ['DATABASE_URL_NEW']):
         strConn = os.environ['DATABASE_URL']
         return strConn
