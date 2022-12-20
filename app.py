@@ -1,8 +1,9 @@
 import secrets
 from flask import Flask, render_template, redirect, session, request
-from helpers import login_required, getRandomTitle, getImagesList
+from helpers import login_required, getRandomTitle, getImagesList, getStringDB
 from flask_session import Session
 from cs50 import SQL
+from datetime import datetime, timezone
 
 
 app = Flask(__name__)
@@ -13,7 +14,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///memory.db")
+db = SQL(getStringDB())
 
 @app.route("/")
 @login_required
@@ -37,6 +38,8 @@ def login():
         session["user_id"] = userid
         session["user_name"] = request.form.get("name")
         session["user_email"] = request.form.get("email")
+
+        db.execute("INSERT INTO users (nome, email, loggin_in) VALUES(?, ?, ?)", session["user_name"], session["user_email"], datetime.now(timezone.utc))
         return redirect("/")
 
     return render_template('login.html', error=error)

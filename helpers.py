@@ -38,8 +38,19 @@ def getImagesList():
     for i in range(len(images)):
         hash = uuid.uuid4().hex
         firstpart, secondpart = hash[:len(hash)//2], hash[len(hash)//2:]
-        imageList.append({"file": images[i], "half_hash": firstpart, "full_hash": hash})
-        imageList.append({"file": images[i], "half_hash": secondpart, "full_hash": hash})
+        imageList.append(
+            {"file": images[i], "half_hash": firstpart, "full_hash": hash})
+        imageList.append(
+            {"file": images[i], "half_hash": secondpart, "full_hash": hash})
 
     random.shuffle(imageList)
     return imageList
+
+
+def getStringDB():
+    strConn = "sqlite:///memory.db"
+    if (os.environ['DATABASE_URL']):
+        strConn = os.environ['DATABASE_URL']
+        return strConn
+
+    return strConn
