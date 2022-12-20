@@ -49,7 +49,7 @@ def getImagesList():
 
 def getStringDB():
     strConn = "sqlite:///memory.db"
-    if (os.environ['DATABASE_URL']):
+    if (os.environ['DATABASE_URL_NEW']):
         strConn = os.environ['DATABASE_URL']
         return strConn
 
