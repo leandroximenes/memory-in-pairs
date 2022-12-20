@@ -1,6 +1,6 @@
 import secrets
 from flask import Flask, render_template, redirect, session, request
-from helpers import login_required, getRandomTitle, getImagesList, getStringDB
+from helpers import login_required, getRandomTitle, getImagesList
 from flask_session import Session
 from cs50 import SQL
 from datetime import datetime, timezone
@@ -14,7 +14,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL(getStringDB())
+db = SQL("sqlite:///memory.db")
 
 @app.route("/")
 @login_required
